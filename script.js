@@ -1,10 +1,18 @@
+// Get the canvas and its 2D rendering context
 const canvas = document.getElementById("drawableCanvas");
 const ctx = canvas.getContext("2d");
+
+// Variables for drawing state and tools
 let isDrawing = false;
 let drawingColor = "blue";
 let drawingTool = "pen"; // Default drawing tool is "pen"
 const canvasRect = canvas.getBoundingClientRect();
 
+// History for undo and redo
+const drawingHistory = []; // Array to store drawing history
+let historyIndex = -1; // Current position in history
+
+// Event listener for mouse down to start drawing
 canvas.addEventListener("mousedown", (e) => {
     isDrawing = true;
     ctx.beginPath();
@@ -17,6 +25,7 @@ canvas.addEventListener("mousedown", (e) => {
     }
 });
 
+// Event listener for mouse up to stop drawing and save the drawing to history
 canvas.addEventListener("mouseup", () => {
     isDrawing = false;
     ctx.closePath();
@@ -27,9 +36,10 @@ canvas.addEventListener("mouseup", () => {
     historyIndex = drawingHistory.length - 1;
 });
 
+// Event listener for mouse move to draw
 canvas.addEventListener("mousemove", draw);
 
-// Event listeners for shape tools
+// Event listeners for selecting different drawing tools
 document.getElementById("squareTool").addEventListener("click", () => {
     drawingTool = "square";
 });
@@ -50,15 +60,13 @@ document.getElementById("lineTool").addEventListener("click", () => {
     drawingTool = "line";
 });
 
-// Color picker input element
+// Event listener for the color picker input
 const colorPicker = document.getElementById("colorPicker");
 colorPicker.addEventListener("input", () => {
     drawingColor = colorPicker.value;
 });
 
-// Undo and redo functionality (as shown in the previous response)
-
-// Function to draw different shapes
+// Function to handle drawing with various tools
 function draw(e) {
     if (!isDrawing) return;
 
@@ -72,10 +80,8 @@ function draw(e) {
         ctx.lineTo(x, y);
         ctx.stroke();
     } else if (drawingTool === "square") {
-        // Draw a square (you can modify this to draw other shapes)
         ctx.strokeRect(x, y, 40, 40);
     } else if (drawingTool === "diamond") {
-        // Draw a diamond (you can modify this to draw other shapes)
         ctx.moveTo(x, y - 20);
         ctx.lineTo(x + 20, y);
         ctx.lineTo(x, y + 20);
@@ -83,11 +89,9 @@ function draw(e) {
         ctx.closePath();
         ctx.stroke();
     } else if (drawingTool === "circle") {
-        // Draw a circle (you can modify this to draw other shapes)
         ctx.arc(x, y, 20, 0, 2 * Math.PI);
         ctx.stroke();
     } else if (drawingTool === "arrow") {
-        // Draw an arrow (you can modify this to draw other shapes)
         ctx.moveTo(x, y);
         ctx.lineTo(x + 30, y);
         ctx.moveTo(x + 25, y - 5);
@@ -95,43 +99,90 @@ function draw(e) {
         ctx.lineTo(x + 25, y + 5);
         ctx.stroke();
     } else if (drawingTool === "line") {
-        // Draw a line (you can modify this to draw other shapes)
         ctx.moveTo(x, y);
         ctx.lineTo(x + 30, y);
         ctx.stroke();
     }
 }
 
-
-// for cursor
+// Event listeners for cursor
 canvas.addEventListener("mousedown", (e) => {
     isDrawing = true;
     ctx.beginPath();
     ctx.moveTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
-    canvas.classList.add("draw-cursor"); // Add the CSS class
+    canvas.classList.add("draw-cursor");
 });
 
 canvas.addEventListener("mouseup", () => {
     isDrawing = false;
-    canvas.classList.remove("draw-cursor"); // Remove the CSS class
+    canvas.classList.remove("draw-cursor");
 });
 
-canvas.addEventListener("mousemove", draw);
+// Event listeners for undo and redo
+document.querySelector(".ur.undo").addEventListener("click", undo);
+document.querySelector(".ur.redo").addEventListener("click", redo);
 
-// colorpicker
-// JavaScript to show the color picker when the pen icon is clicked
+// Event listener for keyboard shortcuts (Ctrl+Z for undo, Ctrl+Y for redo)
+document.addEventListener("keydown", (event) => {
+    if (event.ctrlKey && event.key === "z") {
+        undo();
+    } else if (event.ctrlKey && event.key === "y") {
+        redo();
+    }
+});
+
+// Function to undo the last drawing action
+function undo() {
+    if (historyIndex > 0) {
+        historyIndex--;
+        ctx.putImageData(drawingHistory[historyIndex], 0, 0);
+    } else {
+        // Clear the canvas and reset the history if there are no more actions to undo
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawingHistory.length = 0; // Clear the history
+        historyIndex = -1; // Reset history index
+    }
+}
+
+
+// Function to redo the previously undone drawing action
+function redo() {
+    if (historyIndex < drawingHistory.length - 1) {
+        historyIndex++;
+        ctx.putImageData(drawingHistory[historyIndex], 0, 0);
+    }
+}
+
+// Event listener for the pen icon to show the color picker
 document.getElementById("penIcon").addEventListener("click", function() {
-    // Trigger a click event on the hidden color picker input
     document.getElementById("colorPicker").click();
 });
 
-// JavaScript to update the drawing color when the color picker input changes
+// Event listener for the color picker input to update the drawing color
 document.getElementById("colorPicker").addEventListener("input", function() {
-    // Get the selected color from the color picker
     const selectedColor = this.value;
-    
-    // Update the drawing color (you can modify this to suit your drawing logic)
     drawingColor = selectedColor;
 });
 
+// Get all tool icons
+const toolIcons = document.querySelectorAll(".tool-icon");
 
+// Function to highlight the selected tool and remove highlight from others
+function highlightTool(selectedTool) {
+    toolIcons.forEach((icon) => {
+        icon.classList.remove("active-tool"); // Remove the class from all icons
+        const tool = icon.getAttribute("data-tool");
+        if (tool === selectedTool) {
+            icon.classList.add("active-tool"); // Add the class to the selected icon
+        }
+    });
+}
+
+// Event listeners for tool icons
+toolIcons.forEach((icon) => {
+    icon.addEventListener("click", (event) => {
+        const selectedTool = icon.getAttribute("data-tool");
+        drawingTool = selectedTool; // Update the drawing tool
+        highlightTool(selectedTool); // Highlight the selected tool and remove highlight from others
+    });
+});

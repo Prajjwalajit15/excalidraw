@@ -53,6 +53,10 @@ body {
 #penIcon {
     cursor: pointer; /* Set cursor to pointer when hovering over the pen icon */
 }
+.eraser-cursor {
+    cursor: url('path-to-eraser-icon.png'), auto;
+}
+
 .user{
     width: 10.5%;
     display: flex;
@@ -166,3 +170,9 @@ canvas {
         width: 70%;
     }
 } 
+
+.active-tool {
+    background-color: #e0dfff; /* Change the background color to your desired highlight color */
+    color: white; /* Change the text color to make it more visible */
+}
+
