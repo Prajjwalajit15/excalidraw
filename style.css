@@ -5,7 +5,7 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-top: 0px;
+     padding-bottom: 15px;
 }
 .folder{
    padding: 10px;
@@ -54,6 +54,11 @@ body {
 }
 .arrow{
     background-color: #e0dfff;
+    color: white;
+    width: 20px;
+    height: 24px;
+}
+.tools-Elements{
     width: 20px;
     height: 24px;
 }
@@ -131,7 +136,7 @@ img{
 #footer{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-between; 
 }
 .ft-element{
     color: #313135; 
@@ -143,7 +148,7 @@ img{
     width: 70px;
 background-color: #ececf4; 
   border-radius: 7px;
-}
+} 
 .ur{
     cursor: pointer;
     transition: background-color 0.3s;
@@ -154,12 +159,13 @@ background-color: #ececf4;
 canvas {
     border: 1px solid #000;
     width: 100%;
-    height: 80vh;
+    height: 76.3vh;
 }
 .draw-cursor {
     cursor: crosshair;
 }
 
+ 
 @media (max-width: 1024px){
     .folder{
         width: 2.5%;

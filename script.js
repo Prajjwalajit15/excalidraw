@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 
 // Variables for drawing state and tools
 let isDrawing = false;
-let drawingColor = "blue";
+let drawingColor = "black";
 let drawingTool = "pen"; // Default drawing tool is "pen"
 const canvasRect = canvas.getBoundingClientRect();
 
