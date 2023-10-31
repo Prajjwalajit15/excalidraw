@@ -1,11 +1,11 @@
 body {
-    overflow: hidden;
+    overflow-y: hidden;
 }
 .top{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-top: 10px;
+    padding-top: 0px;
 }
 .folder{
    padding: 10px;
@@ -41,14 +41,21 @@ body {
     border-width: 0;
     border-style: solid;
     border-radius: 5px;
+    margin: 2px; 
 }
 .tools-Elements:hover {
     cursor: pointer;
     transition: background-color 0.3s;
     background-color: #e0dfff;
 }
+#penIcon{
+    width: 20px;
+    height: 24px;
+}
 .arrow{
     background-color: #e0dfff;
+    width: 20px;
+    height: 24px;
 }
 #penIcon {
     cursor: pointer; /* Set cursor to pointer when hovering over the pen icon */

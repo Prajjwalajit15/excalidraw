@@ -186,3 +186,5 @@ toolIcons.forEach((icon) => {
         highlightTool(selectedTool); // Highlight the selected tool and remove highlight from others
     });
 });
+
+ 
